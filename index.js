@@ -114,25 +114,11 @@ const claim = (secret, tgId, username, initData) =>
     const twisters = new Twisters();
 
     while (true) {
-      const resultPets = await pets(secret, tgId, username, initData);
-
-      for (let i = 0; i < resultPets.length; i++) {
-        const petId = resultPets[i].userPet.id;
-        const selectPet = await selectBot(
-          secret,
-          tgId,
-          username,
-          initData,
-          petId
-        );
-        await delay(5000);
-        const claimFi = await claim(secret, tgId, username, initData);
-        twisters.put(petId, {
-          text: `Name Pet : ${selectPet.pet.name} | Level : ${selectPet.level} | Claim Fi : ${claimFi.claimedAmount}`,
-        });
-        await delay(5000);
-      }
-      await delay(8 * 60 * 60 * 1000);
+      const claimFi = await claim(secret, tgId, username, initData);
+      twisters.put(username, {
+        text: `Claim Fi : ${claimFi.claimedAmount}`,
+      });
+      await delay(1 * 60 * 60 * 1000);
     }
   } catch (error) {
     console.error("Error fetching data:", error);
