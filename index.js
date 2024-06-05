@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 import delay from "delay";
 import fs from "fs";
-import { Twisters } from "twisters";
 
 const pets = (secret, tgId, username, initData) =>
   new Promise((resolve, reject) => {
@@ -104,23 +103,22 @@ const claim = (secret, tgId, username, initData) =>
   });
 
 (async () => {
-  try {
-    const secret =
-      "3b675583e01cef1908c7cb8b4883e423add34551366a6d802c019b0a9b7e21b6";
-    const tgId = "580609325";
-    const username = "yudarmd";
-    const initData =
-      "query_id=AAEtZZsiAAAAAC1lmyJ9cnQa&user=%7B%22id%22%3A580609325%2C%22first_name%22%3A%22Yuda%22%2C%22last_name%22%3A%22Rmd%22%2C%22username%22%3A%22yudarmd%22%2C%22language_code%22%3A%22id%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716927923&hash=f89244f65eac288bac1d6d24bda84e3ebc5a1e770930dd24a7e6cfd09db47225";
-    const twisters = new Twisters();
+  const secret =
+    "3b675583e01cef1908c7cb8b4883e423add34551366a6d802c019b0a9b7e21b6";
+  const tgId = "580609325";
+  const username = "yudarmd";
+  const initData =
+    "query_id=AAEtZZsiAAAAAC1lmyJ9cnQa&user=%7B%22id%22%3A580609325%2C%22first_name%22%3A%22Yuda%22%2C%22last_name%22%3A%22Rmd%22%2C%22username%22%3A%22yudarmd%22%2C%22language_code%22%3A%22id%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1716927923&hash=f89244f65eac288bac1d6d24bda84e3ebc5a1e770930dd24a7e6cfd09db47225";
 
-    while (true) {
+  while (true) {
+    try {
       const claimFi = await claim(secret, tgId, username, initData);
-      twisters.put(username, {
-        text: `Claim Fi : ${claimFi.claimedAmount}`,
-      });
-      await delay(1 * 60 * 60 * 1000);
+      if (claimFi.claimedAmount > 0) {
+        console.log(`Claim Fi : ${claimFi.claimedAmount}`);
+        await delay(1 * 60 * 60 * 1000);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-  } catch (error) {
-    console.error("Error fetching data:", error);
   }
 })();
